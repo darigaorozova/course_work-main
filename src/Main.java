@@ -1,9 +1,10 @@
 import java.util.Scanner;
-// s
+
 public class Main {
     public static void main(String[] args) {
         TourPackageManager manager = new TourPackageManager();
         Admin admin = new Admin(manager);
+        UserDetails userDetails = new UserDetails(); // Используем UserDetails для регистрации пользователя
         User user = new User();
 
         Scanner scanner = new Scanner(System.in);
@@ -11,54 +12,12 @@ public class Main {
         String role = scanner.nextLine();
 
         if (role.equalsIgnoreCase("admin")) {
-            System.out.println("Enter admin password:");
-            String password = scanner.nextLine();
-            if (admin.authenticateAdmin(password)) {
-                System.out.println("Authentication successful.");
-                while (true) {
-                    System.out.println("Admin Menu:");
-                    System.out.println("1. Add Tour Package");
-                    System.out.println("2. View Tour Packages");
-                    System.out.println("3. Bookings");
-                    System.out.println("4. Add Another Package");
-                    System.out.println("5. Exit");
-
-                    System.out.print("Enter your choice: ");
-                    int choice = Integer.parseInt(scanner.nextLine());
-
-                    switch (choice) {
-                        case 1:
-                            System.out.println("Enter package type:");
-                            String type = scanner.nextLine();
-                            System.out.println("Enter package transport:");
-                            String transport = scanner.nextLine();
-                            System.out.println("Enter package meals:");
-                            String meals = scanner.nextLine();
-                            System.out.println("Enter package days:");
-                            int days = Integer.parseInt(scanner.nextLine());
-
-                            admin.addTourPackage(type, transport, meals, days);
-                            System.out.println("Tour Package added successfully!");
-                            break;
-                        case 2:
-                            manager.displayPackages();
-                            break;
-                        case 3:
-                            // Список броней
-                            break;
-                        case 4:
-                            System.out.println("Exiting program.");
-                            return;
-                        default:
-                            System.out.println("Invalid choice. Try again.");
-                            break;
-                    }
-                }
-            }
+            // Код для админа...
         } else if (role.equalsIgnoreCase("user")) {
             System.out.println("Available Packages:");
             manager.displayPackages();
 
+            // Запрос пользовательских предпочтений
             System.out.println("Enter your preferences:");
             System.out.print("Type: ");
             String type = scanner.nextLine();
@@ -69,6 +28,7 @@ public class Main {
             System.out.print("Days: ");
             int days = Integer.parseInt(scanner.nextLine());
 
+            // Вывод совпадающих пакетов
             System.out.println("Matching Packages:");
             for (TourPackage tourPackage : manager.packages) {
                 if (tourPackage.getType().equalsIgnoreCase(type) &&
@@ -83,12 +43,23 @@ public class Main {
             int choice = Integer.parseInt(scanner.nextLine());
             if (choice >= 0 && choice < manager.packages.size()) {
                 TourPackage selectedPackage = manager.packages.get(choice);
+                // Бронирование тура
                 user.bookPackage(selectedPackage);
+                // Сохранение данных пользователя
+                userDetails.registerUser();
+                userDetails.saveUserDataToFile();
+                // Выбор способа оплаты
+                System.out.println("Enter payment method (card, cash, etc.):");
+                String paymentMethod = scanner.nextLine();
+                // Бронирование тура и сохранение информации
+                Reservation reservation = new Reservation(userDetails, selectedPackage, paymentMethod);
+                reservation.saveReservationToFile();
             } else {
                 System.out.println("Invalid choice. Exiting program.");
                 return;
             }
 
+            // Вывод забронированных пакетов
             user.displayBookedPackages();
         } else {
             System.out.println("Invalid role. Exiting program.");

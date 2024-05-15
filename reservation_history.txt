@@ -1,0 +1,5 @@
+User: Dariga
+Tour: Type: Cruise, Transport: Ship, Meals: All inclusive, Days: 7
+Reservation Date: 2024-05-15T23:20:15.835518400
+Payment Method: cash
+-----------------------------------------

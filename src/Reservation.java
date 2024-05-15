@@ -1,58 +1,32 @@
-import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
 
 public class Reservation {
-    private String clientName;
-    private String destination;
-    private String date;
+    private UserDetails userDetails;
+    private TourPackage tour;
+    private LocalDateTime reservationDate;
+    private String paymentMethod;
 
-    // Конструктор класса
-    public Reservation(String clientName, String destination, String date) {
-        this.clientName = clientName;
-        this.destination = destination;
-        this.date = date;
+    public Reservation(UserDetails userDetails, TourPackage tour, String paymentMethod) {
+        this.userDetails = userDetails;
+        this.tour = tour;
+        this.reservationDate = LocalDateTime.now();
+        this.paymentMethod = paymentMethod;
     }
 
-    // Метод для отображения информации о брони
-    public void displayReservationInfo() {
-        System.out.println("Информация о бронировании:");
-        System.out.println("Клиент: " + clientName);
-        System.out.println("Место назначения: " + destination);
-        System.out.println("Дата: " + date);
-    }
-
-    // Метод для изменения даты бронирования
-    public void changeDate(String newDate) {
-        this.date = newDate;
-        System.out.println("Дата бронирования изменена на " + newDate);
-    }
-
-    // Другие методы по мере необходимости
-
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        // Получаем данные от пользователя
-        System.out.println("Введите имя клиента:");
-        String name = scanner.nextLine();
-
-        System.out.println("Введите место назначения:");
-        String destination = scanner.nextLine();
-
-        System.out.println("Введите дату бронирования:");
-        String date = scanner.nextLine();
-
-        // Создаем объект бронирования
-        Reservation reservation = new Reservation(name, destination, date);
-
-        // Отображаем информацию о бронировании
-        reservation.displayReservationInfo();
-
-        // Изменяем дату бронирования
-        System.out.println("Введите новую дату бронирования:");
-        String newDate = scanner.nextLine();
-        reservation.changeDate(newDate);
-
-        // Закрываем сканнер
-        scanner.close();
+    public void saveReservationToFile() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("reservation_history.txt", true))) {
+            writer.println("User: " + userDetails.getName());
+            writer.println("Tour: " + tour);
+            writer.println("Reservation Date: " + reservationDate);
+            writer.println("Payment Method: " + paymentMethod);
+            writer.println("-----------------------------------------");
+            System.out.println("Reservation saved successfully.");
+        } catch (IOException e) {
+            System.out.println("Error while saving reservation.");
+            e.printStackTrace();
+        }
     }
 }
