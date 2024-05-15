@@ -1,0 +1,4 @@
+Excursion,Bus,Full bboard,2
+Cruise,Ship,All inclusive,7
+Shopping,Plane,Breakfast,3
+Excursion,Bus,All inclusive,2
